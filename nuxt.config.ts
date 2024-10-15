@@ -1,6 +1,18 @@
 import { defineNuxtConfig } from "nuxt/config";
 
 export default defineNuxtConfig({
+  app: {
+    head: {
+      title: "LoanIQ Admin",
+      htmlAttrs: { lang: "en" },
+      meta: [
+        { charset: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { name: "format-detection", content: "telephone=no" },
+      ],
+      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.svg" }],
+    },
+  },
   postcss: {
     plugins: {
       "postcss-import": {},
@@ -9,14 +21,14 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  plugins: ["~/plugins/aos.client.ts"],
+  plugins: [],
   modules: ['@kevinmarrec/nuxt-pwa'],
   pwa: {
     workbox: {
-      enabled: true
+      enabled: true,
     },
     meta: {
-      title: "Buildr",
+      title: "LoanIQ Admin",
       author: "Marquis",
       mobileAppIOS: false,
       mobileApp: true,
@@ -62,22 +74,21 @@ export default defineNuxtConfig({
         strategyOptions: { cacheableResponse: { statuses: [0, 200] } },
       },
     ],
-  }
-  // modules: [
-  //   '@nuxtjs/pwa'
-  // ],
-  // pwa: {
-  //   manifest: {
-  //     name: 'My Awesome Nuxt 3 PWA',
-  //     short_name: 'Nuxt3PWA',
-  //     lang: 'en',
-  //     useWebmanifestExtension: false,
-  //     display: 'standalone',
-  //     theme_color: '#4DBA87',
-  //     background_color: '#000000'
-  //   },
-  //   workbox: {
-  //     // Workbox options for customizing the service worker
-  //   }
-  // }
+  },
+  nitro: {
+    prerender: {
+      routes: ['/', '/create-pin', '/forgot-password'], // Removed '/about', '/contact' for 404 issues
+      ignore: [
+        '/dashboard/**', // Ignore dynamic dashboard routes
+        '/dashboard/invest',
+        '/dashboard/loans',
+        '/dashboard/payments',
+        '/dashboard/accounts',
+        '/dashboard/support',
+        '/about', // Explicitly ignore if not needed
+        '/contact', // Explicitly ignore if not needed
+      ],
+      failOnError: false, // Suppress the errors and continue the generation
+    },
+  },
 });

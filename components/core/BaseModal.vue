@@ -1,37 +1,86 @@
 <template>
-    <div v-if="show" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
-        <div class="bg-white rounded-3xl shadow-lg p-5 max-w-lg w-full m-auto">
-            <button @click="closeModal" class="float-right text-xl font-semibold">
-                <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <mask id="mask0_7596_1365" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="4" y="4" width="24"
-                        height="24">
-                        <rect x="4" y="4" width="24" height="24" fill="#C4C4C4" />
-                    </mask>
-                    <g mask="url(#mask0_7596_1365)">
-                        <path
-                            d="M10.4 22.3L9.69995 21.6L15.3 16L9.69995 10.4L10.4 9.70001L16 15.3L21.6 9.70001L22.3 10.4L16.7 16L22.3 21.6L21.6 22.3L16 16.7L10.4 22.3Z"
-                            fill="#131316" />
-                    </g>
-                </svg>
+ <main>
+ <!-- Dark overlay -->
+    <transition name="fade">
+      <div v-if="isOpen" class="fixed inset-0 bg-black bg-opacity-50 z-40" @click="closeModal"></div>
+    </transition>
+  
+    <!-- Modal container -->
+    <transition name="scale">
+      <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 p-4 md:p-6">
+        <div
+          @click.stop
+          class="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 space-y-4 mx-4 md:mx-0"
+        >
+          <!-- Modal Header -->
+          <div class="flex justify-between items-center">
+            <h3 class="text-lg font-medium text-gray-900">
+              {{ title }}
+            </h3>
+            <button @click="closeModal" class="text-gray-400 hover:text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
+          </div>
+  
+          <!-- Modal Body (Content slot) -->
+          <div class="mt-2">
             <slot></slot>
+          </div>
+  
+          <!-- Modal Footer (optional) -->
+          <div v-if="$slots.footer" class="mt-4">
+            <slot name="footer"></slot>
+          </div>
         </div>
-    </div>
-</template>
-
-<script setup lang="ts">
-defineProps<{ show: boolean }>();
-const emit = defineEmits(['update:show']);
-
-const closeModal = () => {
-    emit('update:show', false);
-};
-</script>
-
-<style scoped>
-@media (min-width: 768px) {
-    .modal-content {
-        width: 50%;
-    }
-}
-</style>
+      </div>
+    </transition>
+ </main>
+  </template>
+  
+  <script setup lang="ts">
+  import { defineProps, defineEmits, ref, watch } from 'vue';
+  
+  const props = defineProps({
+    title: {
+      type: String,
+      default: 'Modal Title',
+    },
+    modelValue: {
+      type: Boolean,
+      default: false,
+    },
+  });
+  
+  const emit = defineEmits(['update:modelValue']);
+  
+  const isOpen = ref(props.modelValue);
+  
+  watch(() => props.modelValue, (newVal) => {
+    isOpen.value = newVal;
+  });
+  
+  const closeModal = () => {
+    isOpen.value = false;
+    emit('update:modelValue', false);
+  };
+  </script>
+  
+  <style scoped>
+  /* Modal open/close transitions */
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.2s ease;
+  }
+  .fade-enter-from, .fade-leave-to {
+    opacity: 0;
+  }
+  
+  .scale-enter-active, .scale-leave-active {
+    transition: transform 0.3s ease;
+  }
+  .scale-enter-from, .scale-leave-to {
+    transform: scale(0.95);
+  }
+  </style>
+  
