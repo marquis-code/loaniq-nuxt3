@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col items-center justify-center w-full h-screen">
-      <div class="w-[500px] flex flex-col justify-start items-start space-y-5">
+      <div class="lg:w-[500px] p-4 flex flex-col justify-start items-start space-y-5">
         <!-- <div class="flex justify-center items-center flex-col w-full">
           <h2 class="text-xl font-medium text-[#323740] text-center mb-2">Re-enter your 4 digit pin</h2>
         </div> -->

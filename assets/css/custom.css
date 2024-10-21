@@ -1,0 +1,17 @@
+/* assets/css/custom.css */
+.input-field {
+    @apply w-full px-4 py-4  bg-[#F4F5F7] outline-none border-[0.5px] border-[#F4F5F7] rounded-md focus:outline-none focus:border-green-500 transition;
+  }
+
+  .transaction-input-field {
+    @apply w-full px-4 py-4  bg-[#F4F5F7] outline-none border-[0.5px] border-[#F4F5F7] rounded-b-xl focus:outline-none focus:border-green-500 transition;
+  }
+
+  .input-label {
+    @apply block text-[#7D8799] font-medium mb-1 text-sm;
+  }
+
+  .submit-btn {
+    @apply w-full bg-[#2F6D67] text-white py-3.5 disabled:cursor-not-allowed disabled:opacity-25 rounded-md  bg-[#2F6D67] transition;
+  }
+  

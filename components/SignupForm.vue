@@ -1,7 +1,7 @@
 <template>
   <main>
     <div class="flex flex-col items-center justify-center w-full h-screen">
-      <div class="w-[500px] flex flex-col justify-start items-start">
+      <div class="lg:w-[500px] flex flex-col justify-start items-start">
         <div class="flex justify-start items-start">
           <img
             src="@/assets/img/logo.png"
@@ -9,9 +9,8 @@
             class="mx-auto mb-4 w-24"
           />
         </div>
-        <h2 class="text-3xl font-medium text-[#323740] text-center mb-2">
+        <h2 class="lg:text-3xl text-xl font-medium text-[#323740] text-left mb-2">
           Welcome! Sign Up on LoaniQ
-          {{isFormDisabled}}
         </h2>
         <form class="w-full space-y-6" @submit.prevent="register">
           <div class="mb-4">

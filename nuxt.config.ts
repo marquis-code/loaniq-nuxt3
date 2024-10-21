@@ -13,6 +13,10 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.svg" }],
     },
   },
+  css: [
+    '@/assets/css/main.css', // Tailwind CSS
+    '@/assets/css/custom.css',   // Your custom styles
+  ],
   postcss: {
     plugins: {
       "postcss-import": {},

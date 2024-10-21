@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col items-center justify-center w-full h-screen">
-      <div class="w-[500px]  flex flex-col justify-start items-start space-y-4">
+      <div class="lg:w-[500px] p-4  flex flex-col justify-start items-start space-y-4">
         <h2 class="text-3xl font-bold text-[#323740] max-w-md mb-2">Your Account has been successfully created</h2>
         <p class="text-[#687181] leading-relaxed pb-4">
           Here’s your account details

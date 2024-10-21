@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col items-center justify-center w-full h-screen bg-white p-10">
-      <div class="w-[500px] bg-white p-8 text-center space-y-6">
+      <div class="lg:w-[500px] p-4 bg-white p-8 text-center space-y-6">
         <div class="flex justify-center mb-4">
           <img src="@/assets/icons/verify-account.svg" alt="Verify Icon" class="w-20 h-20" />
         </div>

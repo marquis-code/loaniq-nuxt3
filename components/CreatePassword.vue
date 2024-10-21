@@ -1,6 +1,6 @@
 <!-- <template>
     <div class="flex flex-col items-center justify-center w-full h-screen">
-      <div class="w-[500px]  flex flex-col justify-start items-start">
+      <div class="lg:w-[500px] p-4  flex flex-col justify-start items-start">
        <div class="flex justify-start items-start">
         <img src="@/assets/img/logo.png" alt="LoaniQ Logo" class="mx-auto mb-4 w-24" />
        </div>
@@ -188,7 +188,7 @@
 
    <template>
     <div class="flex flex-col items-center justify-center w-full h-screen">
-      <div class="w-[500px] flex flex-col justify-start items-start">
+      <div class="lg:w-[500px] p-4 flex flex-col justify-start items-start">
         <div class="flex justify-start items-start">
           <img src="@/assets/img/logo.png" alt="LoaniQ Logo" class="mx-auto mb-4 w-24" />
         </div>
