@@ -11,8 +11,8 @@
       </p>
       <form class="w-full space-y-6" @submit.prevent="login">
         <div class="mb-4">
-          <label class="block text-[#7D8799] font-medium mb-1 text-sm" for="phone">Enter Your Phone Number</label>
-          <input type="text" id="phone" v-model="credential.phoneNumber.value" class="w-full px-4 py-4  bg-[#F4F5F7] outline-none border-[0.5px] border-[#F4F5F7] rounded-md focus:outline-none focus:border-green-500" />
+          <label class="block text-[#7D8799] font-medium mb-1 text-sm" for="phone">Enter Your Email Address</label>
+          <input type="text" id="email" v-model="credential.email.value" class="w-full px-4 py-4  bg-[#F4F5F7] outline-none border-[0.5px] border-[#F4F5F7] rounded-md focus:outline-none focus:border-green-500" />
         </div>
         <div class="mb-4 relative">
           <label class="block text-[#7D8799] font-medium mb-1 text-sm" for="passcode">Enter Your six-digit passcode</label>

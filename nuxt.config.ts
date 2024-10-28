@@ -25,7 +25,6 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  plugins: [],
   modules: ['@kevinmarrec/nuxt-pwa'],
   pwa: {
     workbox: {

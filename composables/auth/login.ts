@@ -4,7 +4,7 @@ import { useCustomToast } from '@/composables/core/useCustomToast'
 
 const credential = {
   passcode: ref(""),
-  phoneNumber: ref(""),
+  email: ref(""),
 };
 
 export const use_auth_login = () => {
@@ -14,7 +14,7 @@ export const use_auth_login = () => {
 
   const isFormDisabled = computed(() => {
     return (
-      loading.value || !credential.passcode.value || !credential.phoneNumber.value
+      loading.value || !credential.passcode.value || !credential.email.value
     );
   });
 
@@ -22,7 +22,7 @@ export const use_auth_login = () => {
     loading.value = true;
     const res = (await auth_api.$_login({
       passcode: credential.passcode.value,
-      phoneNumber: credential.phoneNumber.value,
+      email: credential.email.value,
     })) as any;
     loading.value = false;
     if (res.type !== "ERROR") {
