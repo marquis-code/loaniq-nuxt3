@@ -36,5 +36,9 @@ export const auth_api = {
 	$_validate_wema_otp_creation: (credential: any) => {
 		const url = '/auth/confirm-account-creation-otp'
 		return GATEWAY_ENDPOINT.post(url, credential)
+	},
+	$_liveliness_check: (credential: any) => {
+		const url = '/auth/face-compare'
+		return GATEWAY_ENDPOINT.post(url, credential)
 	}
 }

@@ -1,5 +1,8 @@
 <template>
-    <CreatePassword />
+   <main>
+      <CreatePassword />
+      <!-- <CoreCameraModal /> -->
+   </main>
   </template>
   
   <script setup lang="ts">
