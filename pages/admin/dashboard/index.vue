@@ -3,12 +3,8 @@
     <main class="-mt-24 pb-8">
       <div class="">
         <h1 class="sr-only">Profile</h1>
-        <!-- Main 3 column grid -->
         <div class="grid grid-cols-1 items-start gap-4 lg:grid-cols-3 lg:gap-8">
-          <!-- Left column -->
           <div class="grid grid-cols-1 gap-4 lg:col-span-2">
-            <!-- Welcome panel -->
-            <!-- Actions panel -->
             <section aria-labelledby="quick-links-title">
               <div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-200 shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0">
                 <h2 class="sr-only" id="quick-links-title">Quick links</h2>
@@ -289,7 +285,7 @@
   
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 definePageMeta({
     layout: 'admin-dashboard'
 })
