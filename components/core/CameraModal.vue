@@ -1,123 +1,135 @@
 <template>
-    <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 space-y-4">
-        <!-- Header Section -->
-        <div class="flex items-center justify-between">
-          <div class="text-center">
-            <!-- <CameraIcon class="w-12 h-12 mx-auto" /> -->
+  <div class="flex flex-col items-center justify-center p-4">
+    <div class="camera-button">
+      <button
+        type="button"
+        class="button is-rounded"
+        :class="{ 'is-primary': !isCameraOpen, 'is-danger': isCameraOpen }"
+        @click="toggleCamera"
+      >
+        <span v-if="!isCameraOpen">
+          <div class="flex justify-center items-center">
+            <img src="@/assets/img/camera.png" alt="Camera Icon" class="w-12 h-12 cursor-pointer flex justify-center items-center" />
           </div>
-          <button @click="closeModal" class="text-gray-500 hover:text-gray-700">
-            <!-- <XIcon class="w-6 h-6" /> -->
-          </button>
-        </div>
-        
-        <!-- Title and Instructions -->
-        <h2 class="text-xl font-semibold text-center">Camera permission required</h2>
-        <p class="text-gray-600 text-center">
-          To make video calls, please turn on the camera permission in your app by clicking the notification.
-        </p>
-  
-        <!-- Notification Section -->
-        <div class="bg-gray-200 rounded-lg p-4 space-y-2">
-          <div class="bg-gray-300 rounded-lg p-2 flex justify-between items-center">
-            <span class="font-semibold">Allow camera access</span>
-            <span class="text-xs text-gray-500">2m ago</span>
+          <div class="bg-gray-100 rounded-lg p-4 flex flex-col items-center mt-10">
+            <p class="text-base font-semibold">Setup Face ID</p>
+            <p class="text-gray-600 text-sm mt-2">Perform face verification by taking a photograph of your face, Quick and secured</p>
           </div>
-          <div class="bg-gray-300 rounded-lg p-2 flex justify-between items-center">
-            <span>New message from Olivia</span>
-            <span class="text-xs text-gray-500">16m ago</span>
-          </div>
-        </div>
-  
-        <!-- Step-by-Step Guide and Buttons -->
-        <div class="text-center">
-          <button @click="toggleGuide" class="text-blue-600 font-semibold">Step-by-step guide</button>
-          <div v-if="showGuide" class="mt-2 text-gray-600">
-            <!-- Add guide content here -->
-            Grant camera permissions in your device settings.
-          </div>
-        </div>
-  
-        <!-- Action Buttons -->
-        <div class="flex justify-between mt-4">
-          <button @click="closeModal" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg">Cancel</button>
-          <button @click="handleCapture" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Didn't get notification?</button>
-        </div>
-  
-        <!-- Camera and Preview -->
-        <div v-if="cameraPermissionGranted && !preview" class="mt-4">
-          <video ref="video" class="w-full rounded-lg" autoplay playsinline></video>
-          <button @click="captureImage" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-lg">Take Picture</button>
-        </div>
-        <div v-if="preview" class="mt-4">
-          <img :src="preview" alt="Captured Image" class="w-full rounded-lg" />
-          <button @click="sendImage" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg">Upload Picture</button>
-        </div>
-      </div>
+        </span>
+        <span class="flex items-center gap-x-3 border px-2 font-medium mb-4 py-2.5 rounded-lg text-sm" v-else>
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d0021b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          Close Camera</span>
+      </button>
     </div>
-  </template>
-  
-  <script setup lang="ts">
-  import { ref } from 'vue'
-//   import { CameraIcon, XIcon } from '@heroicons/vue/solid' // Assuming Heroicons is installed for icons
-  
-  const isOpen = ref(true)
-  const cameraPermissionGranted = ref(false)
-  const video = ref<HTMLVideoElement | null>(null)
-  const preview = ref<string | null>(null)
-  const showGuide = ref(false)
-  
-  // Close Modal
-  const closeModal = () => {
-    isOpen.value = false
+
+    <div v-show="isCameraOpen && isLoading" class="camera-loading">
+      <ul class="loader-circle">
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+
+    <div v-if="isCameraOpen" v-show="!isLoading" class="camera-box" :class="{ flash: isShotPhoto }">
+      <div class="camera-shutter" :class="{ flash: isShotPhoto }"></div>
+
+      <video v-show="!isPhotoTaken" ref="camera" :width="450" :height="337.5" autoplay></video>
+
+      <canvas v-show="isPhotoTaken" id="photoTaken" ref="canvas" :width="450" :height="337.5"></canvas>
+    </div>
+
+    <div v-if="isCameraOpen && !isLoading" class="camera-shoot mt-6">
+      <button type="button" class="button px-6 py-2 rounded-lg flex items-center gap-x-3 border font-medium" @click="takePhoto">
+        <img src="@/assets/img/camera.png" class="h-6 w-6" /> Snap
+      </button>
+    </div>
+
+    <div v-if="isPhotoTaken && isCameraOpen" class="camera-download mt-4">
+      <a id="downloadPhoto" download="my-photo.jpg" class="button bg-black text-white px-6 py-2 rounded-lg" role="button" @click="downloadImage">
+        Download
+      </a>
+    </div>
+  </div>
+</template> 
+
+<script lang="ts" setup>
+import { ref, onMounted, onBeforeUnmount } from "vue";
+
+const isCameraOpen = ref(false);
+const isPhotoTaken = ref(false);
+const isShotPhoto = ref(false);
+const isLoading = ref(false);
+
+const camera = ref<HTMLVideoElement | null>(null);
+const canvas = ref<HTMLCanvasElement | null>(null);
+
+const toggleCamera = () => {
+  if (isCameraOpen.value) {
+    isCameraOpen.value = false;
+    isPhotoTaken.value = false;
+    isShotPhoto.value = false;
+    stopCameraStream();
+  } else {
+    isCameraOpen.value = true;
+    createCameraElement();
   }
-  
-  // Toggle Guide
-  const toggleGuide = () => {
-    showGuide.value = !showGuide.value
+};
+
+const createCameraElement = () => {
+  isLoading.value = true;
+  const constraints = {
+    audio: false,
+    video: true,
+  };
+
+  navigator.mediaDevices
+    .getUserMedia(constraints)
+    .then((stream) => {
+      isLoading.value = false;
+      if (camera.value) camera.value.srcObject = stream;
+    })
+    .catch(() => {
+      isLoading.value = false;
+      alert("The browser doesn't support this feature or there was an error.");
+    });
+};
+
+const stopCameraStream = () => {
+  const tracks = (camera.value?.srcObject as MediaStream)?.getTracks();
+  tracks?.forEach((track) => track.stop());
+};
+
+const takePhoto = () => {
+  if (!isPhotoTaken.value) {
+    isShotPhoto.value = true;
+    const FLASH_TIMEOUT = 50;
+    setTimeout(() => {
+      isShotPhoto.value = false;
+    }, FLASH_TIMEOUT);
   }
-  
-  // Request Camera Access
-  const handleCapture = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true })
-      video.value!.srcObject = stream
-      cameraPermissionGranted.value = true
-    } catch (error) {
-      alert("Camera access denied.")
-    }
+  isPhotoTaken.value = !isPhotoTaken.value;
+
+  if (canvas.value && camera.value) {
+    const context = canvas.value.getContext("2d");
+    context?.drawImage(camera.value, 0, 0, 450, 337.5);
   }
-  
-  // Capture Image
-  const captureImage = () => {
-    const canvas = document.createElement('canvas')
-    const context = canvas.getContext('2d')
-    if (video.value && context) {
-      canvas.width = video.value.videoWidth
-      canvas.height = video.value.videoHeight
-      context.drawImage(video.value, 0, 0, canvas.width, canvas.height)
-      preview.value = canvas.toDataURL('image/png')
-    }
+};
+
+const downloadImage = () => {
+  const downloadLink = document.getElementById("downloadPhoto") as HTMLAnchorElement;
+  if (canvas.value) {
+    const imageURL = canvas.value
+      .toDataURL("image/jpeg")
+      .replace("image/jpeg", "image/octet-stream");
+    downloadLink.setAttribute("href", imageURL);
   }
-  
-  // Send Image to Backend
-  const sendImage = async () => {
-    if (!preview.value) return
-    try {
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: preview.value })
-      })
-      const result = await response.json()
-      alert('Image uploaded successfully!')
-    } catch (error) {
-      alert('Failed to upload image')
-    }
-  }
-  </script>
-  
-  <style scoped>
-  /* Custom styling if needed */
-  </style>
-  
+};
+
+onBeforeUnmount(() => {
+  stopCameraStream();
+});
+</script>
+
+<style scoped>
+/* Your existing CSS styling */
+</style>
